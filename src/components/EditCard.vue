@@ -38,7 +38,7 @@ onMounted(async () => {
 </RouterLink>
 
   <div>
-    <b-form @submit="updatePrefCard" @reset="onReset">
+    <b-form @submit="updatePrefCard">
       <b-form-group
           id="input-group-1"
           label="Name:"
