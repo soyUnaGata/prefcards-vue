@@ -3,11 +3,17 @@
     <RouterLink :to="{name: 'card-add'}">Add</RouterLink>
 
     <h1>Hola</h1>
-    <b-card bg-variant="dark" text-variant="white" :title="prefcard.name" v-for="prefcard in prefcards" :key="prefcard.id">
-      <b-card-text>
-        {{prefcard.duration }}
-      </b-card-text>
-      <b-button href="#" variant="primary">Go somewhere</b-button>
+    <b-card bg-variant="dark" text-variant="white" v-for="prefcard in prefcards" :key="prefcard.id">
+      <RouterLink to="">
+        Delete
+      </RouterLink>
+     <div>
+       <h4>{{prefcard.name}}</h4>
+       <b-card-text>
+         {{prefcard.duration }}
+       </b-card-text>
+       <b-button @click="editCard(prefcard.id)" variant="primary">Edit</b-button>
+     </div>
     </b-card>
   </div>
 </template>
@@ -16,7 +22,7 @@
 import {BCard} from "bootstrap-vue-3";
 import {onMounted, ref} from "vue";
 import PrefCardsService from "../../service/prefcards-service";
-import axios from "axios";
+import router from "@/router";
 
 const prefcards = ref();
 
@@ -27,6 +33,10 @@ const getPrefCards = async () => {
   }catch(error) {
     console.log(error);
   }
+}
+
+const editCard = async (id) => {
+  await router.push({name: 'card-edit', params: { id: id }});
 }
 
 onMounted(async () => {
