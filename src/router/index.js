@@ -13,6 +13,11 @@ const router = createRouter({
             name: 'card-add',
             component: () => import('../components/AddCard.vue')
         },
+        {
+            path: '/card-edit/:id',
+            name: 'card-edit',
+            component: () => import('../components/EditCard.vue')
+        },
 
     ]
 })
