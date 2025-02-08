@@ -8,7 +8,7 @@ class PrefCardsService {
     }
 
     async addPrefCard(prefcard) {
-        return await api.post(`prefcards/add`, prefcard)
+        return await api.post('prefcards/add', prefcard)
     }
 
     async updatePrefCard(id, prefcard) {
@@ -18,7 +18,7 @@ class PrefCardsService {
 
     async getPrefCard(id) {
         return await api.get(`prefcards/${id}`)
-            .then((response) => response)
+            .then((response) => response.data)
             .catch((err) => null);
     }
 
