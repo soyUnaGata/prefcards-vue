@@ -1,20 +1,23 @@
 <template>
-  <div class="hello">
-    <RouterLink :to="{name: 'card-add'}">Add</RouterLink>
-
-    <h1>Hola</h1>
-    <b-card bg-variant="dark" text-variant="white" v-for="prefcard in prefcards" :key="prefcard.id">
-      <RouterLink to="">
-        Delete
-      </RouterLink>
-     <div>
-       <h4>{{prefcard.name}}</h4>
-       <b-card-text>
-         {{prefcard.duration }}
-       </b-card-text>
-       <b-button @click="editCard(prefcard.id)" variant="primary">Edit</b-button>
-     </div>
+  <div class="container">
+    <div class="header">
+      <h2>PrefCards List</h2>
+      <b-button variant="info" class="card-add-btn" @click="addCard">Add</b-button>
+    </div>
+  <div class="wrapper">
+    <b-card class="card-wrapper" text-variant="white" v-for="prefcard in prefcards" :key="prefcard.id" :id="prefcard.id">
+      <div class="card-remove" @click="removeCard(prefcard.id)">
+        <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M135.2 17.7L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-7.2-14.3C307.4 6.8 296.3 0 284.2 0L163.8 0c-12.1 0-23.2 6.8-28.6 17.7zM416 128L32 128 53.2 467c1.6 25.3 22.6 45 47.9 45l245.8 0c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg>
+      </div>
+      <div>
+        <h4>{{prefcard.name}}</h4>
+        <b-card-text>
+          {{prefcard.duration }}
+        </b-card-text>
+        <b-button @click="editCard(prefcard.id)" class="edit-btn">Edit</b-button>
+      </div>
     </b-card>
+  </div>
   </div>
 </template>
 
@@ -39,6 +42,15 @@ const editCard = async (id) => {
   await router.push({name: 'card-edit', params: { id: id }});
 }
 
+const removeCard = async (id) => {
+  await PrefCardsService.removePrefCard(id);
+  prefcards.value = await PrefCardsService.getAllPrefCards();
+}
+
+const addCard = async () => {
+  await router.push({name: 'card-add'});
+}
+
 onMounted(async () => {
   await getPrefCards();
 })
@@ -46,18 +58,48 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-h3 {
-  margin: 40px 0 0;
+.wrapper {
+  margin-top: 15px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 10px;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+
+.card-wrapper {
+  background: rgba( 15, 144, 21, 0.65 );
+  box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+  backdrop-filter: blur( 4.5px );
+  -webkit-backdrop-filter: blur( 4.5px );
+  border-radius: 10px;
+  border: 1px solid rgba( 255, 255, 255, 0.18 );
+  width: 350px;
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
+
+.edit-btn {
+  border-color: #f4bd1a;
+  background-color: #f4bd1a;
 }
-a {
-  color: #42b983;
+
+.edit-btn:hover, .edit-btn:focus, button.edit-btn:active {
+  background-color: #f4ba0b;
+  border-color: #f4ba0b;
+}
+
+.card-remove {
+  fill: #e53529;
+  display: flex;
+  justify-content: end;
+  cursor: pointer;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.card-add-btn{
+  margin-right: 33px;
 }
 </style>
