@@ -1,27 +1,58 @@
 <script setup>
-import {BForm} from "bootstrap-vue-3";
-import {useRoute} from "vue-router";
+import { BForm, BFormInput, BButton, BFormGroup, BFormInvalidFeedback } from "bootstrap-vue-3";
+import { useRoute } from "vue-router";
 import PrefCardsService from "../../service/prefcards-service";
-import {onMounted, ref} from "vue";
+import { computed, onMounted, ref } from "vue";
 import router from "@/router";
 import ReturnButton from "@/components/shared/ReturnButton.vue";
 
 const route = useRoute();
 const prefCardId = ref(route.params.id);
-const prefCard  = ref({});
+const prefCard = ref({});
+const errorMessage = ref('');
 
 const getPrefCard = async () => {
-  try{
+  try {
     prefCard.value = await PrefCardsService.getPrefCard(prefCardId.value);
-  }catch (error){
+  } catch (error) {
     console.log(error);
   }
 }
 
+const formattedDuration = computed({
+  get: () => prefCard.value.duration,
+  set: (value) => {
+    const onlyDigits = value.replace(/\D/g, '');
+    prefCard.value.duration = onlyDigits;
+
+    if (value.trim() !== onlyDigits || onlyDigits === '') {
+      errorMessage.value = 'Please enter a valid number';
+    } else {
+      errorMessage.value = '';
+    }
+  }
+});
+
+const isInvalid = computed(() => errorMessage.value !== '');
+
+const inputState = computed(() => {
+  if (!prefCard.value.duration) return null;
+  return errorMessage.value ? false : null;
+});
+
+const isFormValid = computed(() =>
+    (prefCard.value.name && prefCard.value.name.trim() !== '') &&
+    (prefCard.value.operation && prefCard.value.operation.trim() !== '') &&
+    (prefCard.value.duration && prefCard.value.duration.trim() !== '') &&
+    (prefCard.value.tools && prefCard.value.tools.trim() !== '') &&
+    !isInvalid.value
+);
+
 const updatePrefCard = async (event) => {
-  try{
+  event.preventDefault();
+  try {
     await PrefCardsService.updatePrefCard(prefCardId.value, prefCard.value);
-  }catch(error){
+  } catch (error) {
     console.log(error);
   }
 }
@@ -30,14 +61,13 @@ const cancelForm = async () => {
   await router.push({name: 'cards'});
 }
 
-
 onMounted(async () => {
   await getPrefCard();
 })
 </script>
 
 <template>
-  <return-button @click="cancelForm" />
+  <return-button @click="cancelForm"/>
 
   <div>
     <b-form @submit="updatePrefCard">
@@ -63,13 +93,18 @@ onMounted(async () => {
         ></b-form-input>
       </b-form-group>
 
-      <b-form-group id="input-group-2" label="Duration:" label-for="input-2">
+      <b-form-group id="input-group-3" label="Duration:" label-for="input-3">
         <b-form-input
-            id="input-2"
-            v-model="prefCard.duration"
-            placeholder="Enter duration"
+            id="input-3"
+            v-model="formattedDuration"
+            placeholder="Enter duration in minutes"
+            :state="inputState"
             required
+            aria-describedby="input-live-feedback"
         ></b-form-input>
+        <b-form-invalid-feedback id="input-live-feedback">
+          {{ errorMessage }}
+        </b-form-invalid-feedback>
       </b-form-group>
 
       <b-form-group id="input-group-2" label="Tools:" label-for="input-2">
@@ -81,13 +116,11 @@ onMounted(async () => {
         ></b-form-input>
       </b-form-group>
 
-      <b-button type="submit" variant="success">Submit</b-button>
+      <b-button type="submit" variant="success" :disabled="!isFormValid">Save</b-button>
       <b-button type="button" variant="danger" @click="cancelForm">Cancel</b-button>
     </b-form>
   </div>
 </template>
 
-
 <style scoped>
-
 </style>
