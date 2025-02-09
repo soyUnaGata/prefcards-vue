@@ -11,6 +11,7 @@ const prefCardId = ref(route.params.id);
 const prefCard = ref({});
 const errorMessage = ref('');
 
+////get => load, loading screen, lodash debonce 300
 const getPrefCard = async () => {
   try {
     prefCard.value = await PrefCardsService.getPrefCard(prefCardId.value);
@@ -19,6 +20,7 @@ const getPrefCard = async () => {
   }
 }
 
+//normalized ?
 const formattedDuration = computed({
   get: () => prefCard.value.duration,
   set: (value) => {
@@ -33,6 +35,7 @@ const formattedDuration = computed({
   }
 });
 
+//?
 const isInvalid = computed(() => errorMessage.value !== '');
 
 const inputState = computed(() => {

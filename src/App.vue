@@ -5,13 +5,9 @@
 </template>
 
 <script>
-import HelloWorld from './components/HomeView.vue'
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  }
 }
 </script>
 
