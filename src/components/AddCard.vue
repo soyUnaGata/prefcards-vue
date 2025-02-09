@@ -46,11 +46,11 @@ const isFormValid = computed(() =>
 const saveCard = async (event) => {
   event.preventDefault();
   if (!isFormValid.value) return;
-
   try {
     await PrefCardsService.addPrefCard(prefCard.value);
+    await router.push({name: 'card'})
   } catch (error) {
-    console.log(error);
+    errorMessage.value = error.message;
   }
 };
 
@@ -60,9 +60,9 @@ const cancelForm = async () => {
 </script>
 
 <template>
+  <div class="container">
   <return-button @click="cancelForm" />
-
-  <div>
+    <div class="prefcard-content">
     <b-form @submit="saveCard">
       <b-form-group id="input-group-1" label="Name:" label-for="input-1">
         <b-form-input id="input-1" v-model="prefCard.name" placeholder="Enter name" required></b-form-input>
@@ -90,8 +90,12 @@ const cancelForm = async () => {
         <b-form-input id="input-4" v-model="prefCard.tools" placeholder="Enter tools" required></b-form-input>
       </b-form-group>
 
-      <b-button type="submit" variant="success" :disabled="!isFormValid">Save</b-button>
-      <b-button type="button" variant="danger" @click="cancelForm">Cancel</b-button>
+     <div class="form-btns">
+       <b-button type="submit" variant="success" :disabled="!isFormValid">Save</b-button>
+       <b-button type="button" variant="danger" @click="cancelForm">Cancel</b-button>
+     </div>
     </b-form>
   </div>
+  </div>
 </template>
+
