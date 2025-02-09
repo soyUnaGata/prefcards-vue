@@ -1,5 +1,7 @@
 <template>
-  <RouterView/>
+  <div id="container">
+   <RouterView/>
+  </div>
 </template>
 
 <script>
@@ -14,12 +16,8 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+#container {
+  margin: 0 auto;
+  max-width: 1200px;
 }
 </style>
