@@ -52,8 +52,9 @@ const updatePrefCard = async (event) => {
   event.preventDefault();
   try {
     await PrefCardsService.updatePrefCard(prefCardId.value, prefCard.value);
+    await router.push({name: 'cards'});
   } catch (error) {
-    console.log(error);
+    errorMessage.value = error.message;
   }
 }
 
@@ -67,9 +68,9 @@ onMounted(async () => {
 </script>
 
 <template>
+  <div class="container">
   <return-button @click="cancelForm"/>
-
-  <div>
+    <div class="prefcard-content">
     <b-form @submit="updatePrefCard">
       <b-form-group
           id="input-group-1"
@@ -107,20 +108,21 @@ onMounted(async () => {
         </b-form-invalid-feedback>
       </b-form-group>
 
-      <b-form-group id="input-group-2" label="Tools:" label-for="input-2">
-        <b-form-input
-            id="input-2"
-            v-model="prefCard.tools"
-            placeholder="Enter tools"
-            required
-        ></b-form-input>
-      </b-form-group>
+        <b-form-group id="input-group-2" label="Tools:" label-for="input-2">
+          <b-form-input
+              id="input-2"
+              v-model="prefCard.tools"
+              placeholder="Enter tools"
+              required
+          ></b-form-input>
+        </b-form-group>
 
-      <b-button type="submit" variant="success" :disabled="!isFormValid">Save</b-button>
-      <b-button type="button" variant="danger" @click="cancelForm">Cancel</b-button>
+        <div class="form-btns">
+          <b-button type="submit" variant="success" :disabled="!isFormValid">Save</b-button>
+          <b-button type="button" variant="danger" @click="cancelForm">Cancel</b-button>
+        </div>
     </b-form>
+  </div>
   </div>
 </template>
 
-<style scoped>
-</style>
