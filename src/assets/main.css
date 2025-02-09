@@ -1,0 +1,15 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.prefcard-content{
+    margin-top: 20px;
+}
+
+.form-btns {
+    display: flex;
+    justify-content: end;
+    gap: 15px;
+}
