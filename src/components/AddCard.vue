@@ -90,7 +90,7 @@ const cancelForm = async () => {
         <b-form-input id="input-4" v-model="prefCard.tools" placeholder="Enter tools" required></b-form-input>
       </b-form-group>
 
-      <b-button type="submit" variant="success" :disabled="!isFormValid">Submit</b-button>
+      <b-button type="submit" variant="success" :disabled="!isFormValid">Save</b-button>
       <b-button type="button" variant="danger" @click="cancelForm">Cancel</b-button>
     </b-form>
   </div>
