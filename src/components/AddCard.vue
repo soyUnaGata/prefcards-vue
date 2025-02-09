@@ -1,9 +1,10 @@
 <script setup>
-import { ref, computed } from 'vue';
+import {ref, computed, watch} from 'vue';
 import PrefCardsService from "../../service/prefcards-service";
 import router from "@/router";
-import ReturnButton from "@/components/shared/ReturnButton.vue";
 import {BFormInput} from "bootstrap-vue-3";
+import ReturnButtonIcon from "@/components/icons/ReturnButtonIcon.vue";
+import Loading from "@/components/shared/Loading.vue";
 
 const prefCard = ref({
   name: '',
@@ -11,27 +12,28 @@ const prefCard = ref({
   duration: '',
   tools: ''
 });
-
 const errorMessage = ref('');
+const isLoading = ref(false);
+const isInvalid = ref(false);
 
 const formattedDuration = computed({
   get: () => prefCard.value.duration,
   set: (value) => {
     const onlyDigits = value.replace(/\D/g, '');
     prefCard.value.duration = onlyDigits;
-
-    if (value.trim() !== onlyDigits) {
+    console.log(isFormValid.value);
+    console.log(!isFormValid.value);
+    if (!onlyDigits || value.trim() !== onlyDigits) {
+      isInvalid.value = true;
       errorMessage.value = 'Enter a valid number';
     } else {
       errorMessage.value = '';
+      isInvalid.value = false;
     }
   }
 });
 
-const isInvalid = computed(() => errorMessage.value !== '');
-
 const inputState = computed(() => {
-  if (!prefCard.value.duration) return null;
   return errorMessage.value ? false : null;
 });
 
@@ -47,8 +49,10 @@ const saveCard = async (event) => {
   event.preventDefault();
   if (!isFormValid.value) return;
   try {
+    isLoading.value = true;
+    isFormValid.value = false;
     await PrefCardsService.addPrefCard(prefCard.value);
-    await router.push({name: 'card'})
+    window.location.href = '/';
   } catch (error) {
     errorMessage.value = error.message;
   }
@@ -60,8 +64,9 @@ const cancelForm = async () => {
 </script>
 
 <template>
+  <Loading :loading="isLoading" />
   <div class="container">
-  <return-button @click="cancelForm" />
+  <return-button-icon @click="cancelForm" />
     <div class="prefcard-content">
     <b-form @submit="saveCard">
       <b-form-group id="input-group-1" label="Name:" label-for="input-1">
@@ -81,7 +86,7 @@ const cancelForm = async () => {
             required
             aria-describedby="input-live-feedback"
         ></b-form-input>
-        <b-form-invalid-feedback id="input-live-feedback">
+        <b-form-invalid-feedback id="input-live-feedback" >
           {{ errorMessage }}
         </b-form-invalid-feedback>
       </b-form-group>

@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <Loading :loading="isLoading" />
     <div class="header">
       <h2>PrefCards List</h2>
       <b-button variant="success" class="card-add-btn" @click="addCard">Add</b-button>
@@ -32,16 +33,20 @@ import {BCard} from "bootstrap-vue-3";
 import {onMounted, ref} from "vue";
 import PrefCardsService from "../../service/prefcards-service";
 import router from "@/router";
+import Loading from "@/components/shared/Loading.vue";
 
 const prefcards = ref();
+const isLoading = ref(true);
 
 //get => load, loading screen, lodash debonce 300
-const getPrefCards = async () => {
+const loadPrefCards = async () => {
   try {
      prefcards.value = await PrefCardsService.getAllPrefCards();
     console.log(prefcards.value);
   }catch(error) {
     console.log(error);
+  }finally {
+    isLoading.value = false;
   }
 }
 
@@ -59,7 +64,7 @@ const addCard = async () => {
 }
 
 onMounted(async () => {
-  await getPrefCards();
+  await loadPrefCards();
 })
 
 </script>

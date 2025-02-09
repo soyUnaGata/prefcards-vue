@@ -4,7 +4,7 @@ import { useRoute } from "vue-router";
 import PrefCardsService from "../../service/prefcards-service";
 import { computed, onMounted, ref } from "vue";
 import router from "@/router";
-import ReturnButton from "@/components/shared/ReturnButton.vue";
+import ReturnButtonIcon from "@/components/icons/ReturnButtonIcon.vue";
 
 const route = useRoute();
 const prefCardId = ref(route.params.id);
@@ -55,7 +55,7 @@ const updatePrefCard = async (event) => {
   event.preventDefault();
   try {
     await PrefCardsService.updatePrefCard(prefCardId.value, prefCard.value);
-    await router.push({name: 'cards'});
+    window.location.href = '/';
   } catch (error) {
     errorMessage.value = error.message;
   }
@@ -72,7 +72,7 @@ onMounted(async () => {
 
 <template>
   <div class="container">
-  <return-button @click="cancelForm"/>
+  <return-button-icon @click="cancelForm"/>
     <div class="prefcard-content">
     <b-form @submit="updatePrefCard">
       <b-form-group
