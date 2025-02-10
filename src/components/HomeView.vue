@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <Loading :loading="isLoading" />
+    <ErrorNotification :error="errorMessageApi" />
     <div class="header" v-show="!isLoading">
       <h2>PrefCards List</h2>
       <b-button variant="success" class="card-add-btn" @click="addCard">Add</b-button>
@@ -34,17 +35,18 @@ import {onMounted, ref} from "vue";
 import PrefCardsService from "../../service/prefcards-service";
 import router from "@/router";
 import Loading from "@/components/shared/Loading.vue";
+import ErrorNotification from "@/components/shared/ErrorNotification.vue";
 
 const prefcards = ref();
 const isLoading = ref(true);
+const errorMessageApi = ref({});
 
 //get => load, loading screen, lodash debonce 300
 const loadPrefCards = async () => {
   try {
      prefcards.value = await PrefCardsService.getAllPrefCards();
-    console.log(prefcards.value);
   }catch(error) {
-    console.log(error);
+    errorMessageApi.value = error.message || 'Error happened';
   }finally {
     isLoading.value = false;
   }

@@ -5,6 +5,8 @@ import PrefCardsService from "../../service/prefcards-service";
 import {computed, onMounted, onUnmounted, ref} from "vue";
 import router from "@/router";
 import ReturnButtonIcon from "@/components/icons/ReturnButtonIcon.vue";
+import ErrorNotification from "@/components/shared/ErrorNotification.vue";
+import Loading from "@/components/shared/Loading.vue";
 
 const route = useRoute();
 const prefCardId = ref(route.params.id);
@@ -12,14 +14,14 @@ const prefCard = ref({});
 const errorMessage = ref('');
 const isLoading = ref(true);
 const isValid = ref(false);
+const errorMessageApi = ref({});
 
-////get => load, loading screen, lodash debonce 300
 const loadPrefCard = async () => {
   isLoading.value = true;
   try {
     prefCard.value = await PrefCardsService.getPrefCard(prefCardId.value);
   } catch (error) {
-    console.log(error);
+    errorMessageApi.value = error.message || 'Error happened';
   }finally {
     isLoading.value = false;
   }
@@ -63,7 +65,7 @@ const updatePrefCard = async (event) => {
     await PrefCardsService.updatePrefCard(prefCardId.value, prefCard.value);
     window.location.href = '/';
   } catch (error) {
-    errorMessage.value = error.message;
+    errorMessageApi.value = error.message || 'Error happened';
   }
 }
 
@@ -82,6 +84,8 @@ onUnmounted(async () => {
 </script>
 
 <template>
+  <Loading :loading="isLoading" />
+  <ErrorNotification :error="errorMessageApi" />
   <div class="container">
   <return-button-icon @click="cancelForm"/>
     <div class="prefcard-content">

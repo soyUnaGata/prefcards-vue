@@ -5,6 +5,7 @@ import router from "@/router";
 import {BFormInput} from "bootstrap-vue-3";
 import ReturnButtonIcon from "@/components/icons/ReturnButtonIcon.vue";
 import Loading from "@/components/shared/Loading.vue";
+import ErrorNotification from "@/components/shared/ErrorNotification.vue";
 
 const prefCard = ref({
   name: '',
@@ -15,6 +16,7 @@ const prefCard = ref({
 const errorMessage = ref('');
 const isLoading = ref(false);
 const isValid = ref(false);
+const errorMessageApi = ref({});
 
 const normalizeDuration = computed({
   get: () => prefCard.value.duration,
@@ -54,7 +56,7 @@ const saveCard = async (event) => {
     await PrefCardsService.addPrefCard(prefCard.value);
     window.location.href = '/';
   } catch (error) {
-    errorMessage.value = error.message;
+    errorMessageApi.value = error.message || 'Error happened';
   }
 };
 
@@ -69,6 +71,7 @@ onUnmounted(async () => {
 
 <template>
   <Loading :loading="isLoading" />
+  <ErrorNotification :error="errorMessageApi" />
   <div class="container">
   <return-button-icon @click="cancelForm" />
     <div class="prefcard-content">
