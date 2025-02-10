@@ -65,6 +65,7 @@ const addCard = async () => {
 
 onMounted(async () => {
   await loadPrefCards();
+  isLoading.value;
 })
 
 </script>

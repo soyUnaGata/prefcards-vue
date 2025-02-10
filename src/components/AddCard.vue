@@ -1,5 +1,5 @@
 <script setup>
-import {ref, computed, watch} from 'vue';
+import {ref, computed, watch, onUnmounted} from 'vue';
 import PrefCardsService from "../../service/prefcards-service";
 import router from "@/router";
 import {BFormInput} from "bootstrap-vue-3";
@@ -14,7 +14,7 @@ const prefCard = ref({
 });
 const errorMessage = ref('');
 const isLoading = ref(false);
-const isInvalid = ref(false);
+const isValid = ref(false);
 
 const formattedDuration = computed({
   get: () => prefCard.value.duration,
@@ -24,11 +24,11 @@ const formattedDuration = computed({
     console.log(isFormValid.value);
     console.log(!isFormValid.value);
     if (!onlyDigits || value.trim() !== onlyDigits) {
-      isInvalid.value = true;
+      isValid.value = true;
       errorMessage.value = 'Enter a valid number';
     } else {
       errorMessage.value = '';
-      isInvalid.value = false;
+      isValid.value = false;
     }
   }
 });
@@ -42,7 +42,7 @@ const isFormValid = computed(() =>
     prefCard.value.operation.trim() !== '' &&
     prefCard.value.duration !== '' &&
     prefCard.value.tools.trim() !== '' &&
-    !isInvalid.value
+    !isValid.value
 );
 
 const saveCard = async (event) => {
@@ -61,6 +61,10 @@ const saveCard = async (event) => {
 const cancelForm = async () => {
   await router.push({ name: 'cards' });
 };
+
+onUnmounted(async () => {
+  isLoading.value = false;
+})
 </script>
 
 <template>

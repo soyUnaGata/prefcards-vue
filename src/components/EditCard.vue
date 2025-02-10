@@ -2,7 +2,7 @@
 import { BForm, BFormInput, BButton, BFormGroup, BFormInvalidFeedback } from "bootstrap-vue-3";
 import { useRoute } from "vue-router";
 import PrefCardsService from "../../service/prefcards-service";
-import { computed, onMounted, ref } from "vue";
+import {computed, onMounted, onUnmounted, ref} from "vue";
 import router from "@/router";
 import ReturnButtonIcon from "@/components/icons/ReturnButtonIcon.vue";
 
@@ -10,11 +10,14 @@ const route = useRoute();
 const prefCardId = ref(route.params.id);
 const prefCard = ref({});
 const errorMessage = ref('');
+const isLoading = ref(true);
+const isValid = ref(false);
 
 ////get => load, loading screen, lodash debonce 300
 const getPrefCard = async () => {
   try {
     prefCard.value = await PrefCardsService.getPrefCard(prefCardId.value);
+    isLoading.value = false;
   } catch (error) {
     console.log(error);
   }
@@ -26,20 +29,20 @@ const formattedDuration = computed({
   set: (value) => {
     const onlyDigits = value.replace(/\D/g, '');
     prefCard.value.duration = onlyDigits;
-
-    if (value.trim() !== onlyDigits || onlyDigits === '') {
-      errorMessage.value = 'Please enter a valid number';
+    console.log(isFormValid.value);
+    console.log(!isFormValid.value);
+    if (!onlyDigits || value.trim() !== onlyDigits) {
+      isValid.value = true;
+      errorMessage.value = 'Enter a valid number';
     } else {
       errorMessage.value = '';
+      isValid.value = false;
     }
   }
 });
 
-//?
-const isInvalid = computed(() => errorMessage.value !== '');
 
 const inputState = computed(() => {
-  if (!prefCard.value.duration) return null;
   return errorMessage.value ? false : null;
 });
 
@@ -48,12 +51,13 @@ const isFormValid = computed(() =>
     (prefCard.value.operation && prefCard.value.operation.trim() !== '') &&
     (prefCard.value.duration && prefCard.value.duration.trim() !== '') &&
     (prefCard.value.tools && prefCard.value.tools.trim() !== '') &&
-    !isInvalid.value
+    !isValid.value
 );
 
 const updatePrefCard = async (event) => {
   event.preventDefault();
   try {
+    isLoading.value = true;
     await PrefCardsService.updatePrefCard(prefCardId.value, prefCard.value);
     window.location.href = '/';
   } catch (error) {
@@ -67,6 +71,10 @@ const cancelForm = async () => {
 
 onMounted(async () => {
   await getPrefCard();
+})
+
+onUnmounted(async () => {
+  isLoading.value = false;
 })
 </script>
 
