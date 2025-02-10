@@ -14,17 +14,19 @@ const isLoading = ref(true);
 const isValid = ref(false);
 
 ////get => load, loading screen, lodash debonce 300
-const getPrefCard = async () => {
+const loadPrefCard = async () => {
+  isLoading.value = true;
   try {
     prefCard.value = await PrefCardsService.getPrefCard(prefCardId.value);
-    isLoading.value = false;
   } catch (error) {
     console.log(error);
+  }finally {
+    isLoading.value = false;
   }
 }
 
 //normalized ?
-const formattedDuration = computed({
+const normalizeDuration = computed({
   get: () => prefCard.value.duration,
   set: (value) => {
     const onlyDigits = value.replace(/\D/g, '');
@@ -70,7 +72,8 @@ const cancelForm = async () => {
 }
 
 onMounted(async () => {
-  await getPrefCard();
+  isLoading.value = true;
+  await loadPrefCard();
 })
 
 onUnmounted(async () => {
@@ -108,7 +111,7 @@ onUnmounted(async () => {
       <b-form-group id="input-group-3" label="Duration:" label-for="input-3">
         <b-form-input
             id="input-3"
-            v-model="formattedDuration"
+            v-model="normalizeDuration"
             placeholder="Enter duration in minutes"
             :state="inputState"
             required

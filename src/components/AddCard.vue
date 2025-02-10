@@ -16,7 +16,7 @@ const errorMessage = ref('');
 const isLoading = ref(false);
 const isValid = ref(false);
 
-const formattedDuration = computed({
+const normalizeDuration = computed({
   get: () => prefCard.value.duration,
   set: (value) => {
     const onlyDigits = value.replace(/\D/g, '');
@@ -84,7 +84,7 @@ onUnmounted(async () => {
       <b-form-group id="input-group-3" label="Duration:" label-for="input-3">
         <b-form-input
             id="input-3"
-            v-model="formattedDuration"
+            v-model="normalizeDuration"
             placeholder="Enter duration in minutes"
             :state="inputState"
             required
