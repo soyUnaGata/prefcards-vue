@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <Loading :loading="isLoading" />
-    <div class="header">
+    <div class="header" v-show="!isLoading">
       <h2>PrefCards List</h2>
       <b-button variant="success" class="card-add-btn" @click="addCard">Add</b-button>
     </div>
