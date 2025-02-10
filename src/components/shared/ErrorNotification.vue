@@ -55,6 +55,29 @@ export default defineComponent({
       cursor: pointer;
       margin-left: 10px;
     }
+
+    @media (max-width: 768px) {
+      .error-notification {
+        top: 10px;
+        right: 10px;
+        padding: 8px 15px;
+        font-size: 14px;
+      }
+      .error-notification button {
+        font-size: 14px;
+      }
+    }
+    @media (max-width: 480px) {
+      .error-notification {
+        top: 5px;
+        right: 5px;
+        padding: 6px 10px;
+        font-size: 12px;
+      }
+      .error-notification button {
+        font-size: 12px;
+      }
+    }
   `
 });
 </script>

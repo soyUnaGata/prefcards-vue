@@ -27,7 +27,6 @@ const loadPrefCard = async () => {
   }
 }
 
-//normalized ?
 const normalizeDuration = computed({
   get: () => prefCard.value.duration,
   set: (value) => {
