@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="prefcard-container">
     <Loading :loading="isLoading" />
     <ErrorNotification :error="errorMessageApi" />
     <div class="header" v-show="!isLoading">
@@ -78,6 +78,7 @@ onMounted(async () => {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 10px;
+  width: 100%;
 }
 
 .card-wrapper {
@@ -116,9 +117,57 @@ onMounted(async () => {
   justify-content: space-between;
   align-items: center;
   margin-top: 20px;
+  width: 100%;
 }
 
 .card-add-btn{
   margin-right: 33px;
+}
+@media (max-width: 1200px) {
+  .wrapper {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  .card-add-btn{
+    margin-right: 28px;
+
+  }
+}
+
+@media (max-width: 1006px) {
+  .wrapper {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 992px) {
+  .wrapper {
+    grid-template-columns: 1fr 1fr;
+  }
+  .card-add-btn{
+    margin-right: 0;
+
+  }
+}
+
+@media (max-width: 768px){
+  .wrapper {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .card-add-btn{
+    margin-right: 0;
+
+  }
+}
+
+@media (max-width: 480px) {
+  .wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .card-add-btn{
+    margin-right: 0;
+
+  }
 }
 </style>

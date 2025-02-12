@@ -1,6 +1,7 @@
 <template>
   <div class="loader" v-if="loading">
-    <h3>We use free recourses, so it might take time to load all the information. Thank you for waiting!</h3>
+    <h3>We use free recourses, so it might take time to load all the information</h3>
+    <h3>Thank you for waiting!</h3>
     <div class="spinner"></div>
   </div>
 </template>
