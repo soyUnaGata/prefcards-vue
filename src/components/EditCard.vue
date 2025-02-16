@@ -85,7 +85,7 @@ onUnmounted(async () => {
 <template>
   <Loading :loading="isLoading" />
   <ErrorNotification :error="errorMessageApi" />
-  <div class="prefcard-container">
+  <div class="prefcard-container" v-show="!isLoading">
   <return-button-icon @click="cancelForm"/>
     <div class="prefcard-content">
     <b-form @submit="updatePrefCard">
